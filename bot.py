@@ -15,7 +15,13 @@ con = pymysql.connect(
     database=config["DB"]["database"]
 )
 
-bot: commands.Bot = commands.Bot(command_prefix="/")
+def get_prefix(bot, message):
+    with con.cursor() as cur:
+        cur.execute(f"SELECT prefix FROM simple_voice.server_{message.guild.id};")
+        row = cur.fetchone()
+        return row
+
+bot: commands.Bot = commands.Bot(command_prefix = get_prefix, instintents = discord.Intents.all())
 
 @bot.event
 async def on_ready():
