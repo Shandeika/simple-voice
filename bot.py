@@ -31,7 +31,12 @@ async def on_ready():
 async def on_guild_join(guild):
     with con.cursor() as cur:
         cur.execute(f"INSERT INTO `simple_voice`.`servers_data` (`server_id`) VALUES ('{guild.id}');")
-    
+
+@bot.event
+async def on_guild_remove(guild):
+    with con.cursor() as cur:
+        cur.execute(f"DELETE FROM `simple_voice`.`servers_data` WHERE (`server_id` = '{guild.id}');")
+
 @bot.command()
 async def info(ctx):
     await ctx.send('Test!')
