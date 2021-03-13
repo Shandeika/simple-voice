@@ -48,6 +48,25 @@ async def info(ctx):
     embed.set_author(name='Shandy', url='https://github.com/Shandeika/',
                      icon_url='https://photo.shandy-dev.ru/shandy/uploads/9de56bb9dc3276a0b7cf678809097521.png')
     embed.set_footer(text='Copyright © 2019–2021 Shandy developer agency All Rights Reserved. © 2021')
-    await ctx.send(embed=embed)    
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def setprefix(ctx, prefix: str = None):
+    if prefix is None:
+        embed = discord.Embed(title=":x: Ошибка", description="Вы не указали префикс!", colour=0x8691c8)
+        await ctx.send(embed=embed)
+    elif prefix.find(" ") != -1:
+        embed = discord.Embed(title=":x: Ошибка",
+                              description="Вы указали префикс с пробелом!\nЭто может сломать бота, не стоит так делать.",
+                              colour=0x8691c8)
+        await ctx.send(embed=embed)
+    elif len(prefix) >= 5:
+        embed = discord.Embed(title=":x: Ошибка", description="Префикс длиннее 5 символов!", colour=0x8691c8)
+        await ctx.send(embed=embed)
+    else:
+        with con.cursor() as cur:
+            cur.execute(f"UPDATE `simple_voice`.`servers_data` SET `prefix` = '{prefix}' WHERE (`server_id` = '{ctx.guild.id}');")
+            embed = discord.Embed(title=f":white_check_mark: Префикс успешно обновлен!", colour=0x8691c8)
+            await ctx.send(embed=embed)
 
 bot.run(config["Config"]["token"])
