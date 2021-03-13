@@ -27,6 +27,11 @@ bot: commands.Bot = commands.Bot(command_prefix = get_prefix, intents = discord.
 async def on_ready():
     print(f'Авторизован под {bot.user}')
 
+@bot.event
+async def on_guild_join(guild):
+    with con.cursor() as cur:
+        cur.execute(f"INSERT INTO `simple_voice`.`servers_data` (`server_id`) VALUES ('{guild.id}');")
+    
 @bot.command()
 async def info(ctx):
     await ctx.send('Test!')
