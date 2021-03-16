@@ -1,7 +1,6 @@
 import discord
 import pymysql
 import configparser
-import functions
 import asyncio
 from discord.ext import commands
 
